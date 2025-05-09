@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impressum | BytePlugins</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --neon-primary: #9d4dff;
+      --neon-secondary: #4da6ff;
+      --text-primary: #f0f0f0;
+      --text-secondary: #b8b8b8;
+      --bg-dark: #0f0f1a;
+      --bg-card: #1a1a2e;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: neon-glow 3s ease-in-out infinite;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(157, 77, 255, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(157, 77, 255, 0.1);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: var(--neon-primary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--neon-secondary);
+    }
+
+    @keyframes neon-glow {
+      0%, 100% {
+        text-shadow: 0 0 10px var(--neon-primary),
+                     0 0 20px var(--neon-primary),
+                     0 0 30px var(--neon-primary);
+      }
+      50% {
+        text-shadow: 0 0 5px var(--neon-primary),
+                     0 0 10px var(--neon-secondary),
+                     0 0 15px var(--neon-secondary);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Impressum</h1>
+  <div class="card" id="legal-card">
+    <p><strong>Max Mustermann</strong><br/>Musterstraße 12<br/>12345 Musterstadt<br/>Deutschland</p>
+    <p>E-Mail: <a href="mailto:max@mustermann.de">max@mustermann.de</a></p>
+    <p>Verantwortlich für den Inhalt gemäß § 55 Abs. 2 RStV: Max Mustermann</p>
+    <p>
+      Plattform der EU-Kommission zur Online-Streitbeilegung:<br/>
+      <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a><br/>
+      Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+    </p>
+  </div>
+
+  <script>
+    const el = document.getElementById('legal-card');
+    new IntersectionObserver(e => {
+      if (e[0].isIntersecting) el.classList.add('visible');
+    }).observe(el);
+  </script>
+</body>
+</html>

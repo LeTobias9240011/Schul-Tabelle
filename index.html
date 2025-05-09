@@ -1,409 +1,781 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5-Tage-Plan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>BytePlugins | Premium Minecraft Plugins</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS wird direkt eingebettet für bessere Performance */
         :root {
-            --neon-green: #39ff14;
-            --neon-blue: #00f2ff;
-            --neon-pink: #ff00ff;
-            --neon-orange: #ff8c00;
-            --neon-purple: #9400d3;
-            --neon-red: #ff3131;
-            --dark-bg: #050505;
-            --darker-bg: #020202;
-            --light-text: #f0f0f0;
-            --border-radius: 12px;
-            --box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+            --neon-primary: #9d4dff;
+            --neon-secondary: #4da6ff;
+            --neon-accent: #ff4df3;
+            --dark-bg: #0f0f1a;
+            --darker-bg: #0a0a12;
+            --card-bg: #1a1a2e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b8b8b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: var(--darker-bg);
-            color: var(--light-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
         }
 
-        .section {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Neon glow animation */
+        @keyframes neon-glow {
+            0%, 100% {
+                text-shadow: 0 0 10px var(--neon-primary), 
+                            0 0 20px var(--neon-primary), 
+                            0 0 30px var(--neon-primary);
+            }
+            50% {
+                text-shadow: 0 0 5px var(--neon-primary), 
+                            0 0 10px var(--neon-primary), 
+                            0 0 15px var(--neon-primary),
+                            0 0 20px var(--neon-secondary);
+            }
         }
 
-        .neon-text {
-            font-size: 2.5rem;
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green), 
-                         0 0 20px var(--neon-green),
-                         0 0 30px rgba(57, 255, 20, 0.5);
-            animation: neonPulse 2s infinite alternate;
-            margin-bottom: 30px;
+        @keyframes border-glow {
+            0%, 100% {
+                box-shadow: 0 0 10px var(--neon-primary), 
+                            inset 0 0 10px var(--neon-primary);
+                border-color: var(--neon-primary);
+            }
+            50% {
+                box-shadow: 0 0 15px var(--neon-secondary), 
+                            inset 0 0 15px var(--neon-secondary);
+                border-color: var(--neon-secondary);
+            }
+        }
+
+        /* Header styles */
+        header {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, #1a1a2e 100%);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(157, 77, 255, 0.2);
+        }
+
+        .navbar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
         }
 
-        @keyframes neonPulse {
-            from { text-shadow: 0 0 5px var(--neon-green), 
-                              0 0 10px var(--neon-green); }
-            to { text-shadow: 0 0 15px var(--neon-green), 
-                            0 0 30px var(--neon-green),
-                            0 0 45px rgba(57, 255, 20, 0.8); }
-        }
-
-        .date-range {
-            font-size: 1rem;
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            padding: 5px 15px;
-            border-radius: 25px;
-            border: 1px solid var(--neon-green);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-            animation: gradientShift 4s ease infinite;
-            background-size: 200% 200%;
+            animation: neon-glow 3s ease-in-out infinite;
+            text-decoration: none;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
         }
 
-        .table-responsive {
-            overflow-x: auto;
-            margin: 3rem 0;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow),
-                        inset 0 0 30px rgba(0, 0, 0, 0.8);
-            background: linear-gradient(145deg, 
-                          rgba(57,255,20,0.05) 0%, 
-                          rgba(0,0,0,0.95) 100%);
-            padding: 3px;
-            position: relative;
-        }
-
-        .table-responsive::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, 
-                          var(--neon-green), 
-                          var(--neon-blue), 
-                          var(--neon-pink), 
-                          var(--neon-orange));
-            z-index: -2;
-            border-radius: calc(var(--border-radius) + 3px);
-            animation: borderGlow 6s linear infinite;
-            background-size: 400% 400%;
-            filter: blur(3px);
-            opacity: 0.7;
-        }
-
-        @keyframes borderGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .week-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: rgba(10, 10, 10, 0.97);
-            border: 1px solid rgba(57, 255, 20, 0.3);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            position: relative;
-            backdrop-filter: blur(2px);
-        }
-
-        .week-table::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, 
-                          transparent, 
-                          var(--neon-green), 
-                          transparent);
-            animation: scanline 3s linear infinite;
-        }
-
-        @keyframes scanline {
-            0% { top: 0; opacity: 0; }
-            1% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        .week-table th, 
-        .week-table td {
-            padding: 1.5rem;
-            border: 1px solid rgba(57, 255, 20, 0.1);
-            text-align: left;
-            position: relative;
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
             transition: all 0.3s ease;
+            position: relative;
         }
 
-        .week-table th {
-            background: linear-gradient(to right, 
-                          rgba(57, 255, 20, 0.15), 
-                          rgba(0, 242, 255, 0.15));
-            color: var(--neon-green);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
-            font-weight: 600;
+        .nav-links a:hover {
+            color: var(--neon-primary);
         }
 
-        .week-table tr:nth-child(even) {
-            background: rgba(20, 20, 20, 0.7);
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            transition: width 0.3s ease;
         }
 
-        .week-table tr.highlight {
-            background: rgba(57, 255, 20, 0.08);
-            box-shadow: inset 0 0 20px rgba(57, 255, 20, 0.1);
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
-        .week-table tr:hover {
-            background: rgba(57, 255, 20, 0.15) !important;
-            transform: scale(1.01);
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-        }
-
-        .week-table td {
-            color: var(--light-text);
-            vertical-align: middle;
-        }
-
-        .week-table td i {
-            margin-right: 0.8rem;
-            font-size: 1.2em;
-            text-shadow: 0 0 5px currentColor;
-        }
-
-        .week-table .date {
-            font-size: 0.85em;
-            opacity: 0.8;
-            display: block;
-            margin-top: 5px;
-            color: var(--neon-blue);
-        }
-
-        .important {
-            color: var(--neon-blue) !important;
-            animation: pulseBlue 2s infinite;
-        }
-
-        .urgent {
-            color: var(--neon-orange) !important;
-            animation: pulseOrange 1.5s infinite;
-        }
-
-        .review {
-            color: var(--neon-green) !important;
-            animation: pulseGreen 3s infinite;
-        }
-
-        .celebrate {
-            color: var(--neon-pink) !important;
-            animation: pulsePink 1s infinite;
-        }
-
-        @keyframes pulseBlue {
-            0% { text-shadow: 0 0 5px var(--neon-blue); }
-            50% { text-shadow: 0 0 20px var(--neon-blue); }
-            100% { text-shadow: 0 0 5px var(--neon-blue); }
-        }
-
-        @keyframes pulseOrange {
-            0% { text-shadow: 0 0 5px var(--neon-orange); }
-            50% { text-shadow: 0 0 15px var(--neon-orange); }
-            100% { text-shadow: 0 0 5px var(--neon-orange); }
-        }
-
-        @keyframes pulseGreen {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; text-shadow: 0 0 15px var(--neon-green); }
-            100% { opacity: 0.8; }
-        }
-
-        @keyframes pulsePink {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .table-legend {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(10, 10, 10, 0.9);
-            border: 1px solid rgba(57, 255, 20, 0.3);
-            border-radius: var(--border-radius);
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3),
-                        inset 0 0 20px rgba(0, 0, 0, 0.5);
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            margin-top: -80px;
+            background: radial-gradient(circle at center, rgba(157, 77, 255, 0.1) 0%, transparent 70%);
             position: relative;
             overflow: hidden;
         }
 
-        .table-legend::before {
+        .hero::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(
-                circle,
-                rgba(57, 255, 20, 0.1) 0%,
-                rgba(0, 0, 0, 0) 70%
-            );
-            animation: rotate 20s linear infinite;
+            background: radial-gradient(circle, rgba(77, 166, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 60s linear infinite;
+            z-index: -1;
         }
 
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .table-legend h3 {
-            color: var(--neon-green);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: neon-glow 3s ease-in-out infinite;
+        }
+
+        .hero p {
             font-size: 1.5rem;
-            position: relative;
-            z-index: 1;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
         }
 
-        .table-legend ul {
-            list-style: none;
-            padding: 0;
+        .cta-buttons {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
             z-index: 1;
         }
 
-        .table-legend li {
+        .btn-primary {
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(157, 77, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--neon-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(157, 77, 255, 0.1);
+            border-color: var(--neon-secondary);
+            transform: translateY(-3px);
+        }
+
+        /* Plugins section */
+        .plugins-section {
+            padding: 5rem 2rem;
+            background-color: var(--darker-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .plugins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .plugin-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(157, 77, 255, 0.2);
+            animation: border-glow 4s infinite alternate;
+        }
+
+        .plugin-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(157, 77, 255, 0.2);
+            border-color: var(--neon-primary);
+        }
+
+        .plugin-image {
+            height: 150px;
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plugin-image i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .plugin-content {
+            padding: 1.5rem;
+        }
+
+        .plugin-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--neon-primary);
+        }
+
+        .plugin-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .plugin-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .plugin-version {
+            background: rgba(157, 77, 255, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            color: var(--neon-primary);
+        }
+
+        .plugin-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Plugin details modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            max-width: 900px;
+            margin: 2rem auto;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--neon-primary);
+            box-shadow: 0 0 30px rgba(157, 77, 255, 0.3);
+            animation: border-glow 4s infinite alternate;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .plugin-details-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .plugin-details-image {
+            flex: 0 0 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .plugin-details-image i {
+            font-size: 5rem;
+            color: white;
+        }
+
+        .plugin-details-info {
+            flex: 1;
+        }
+
+        .plugin-details-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--neon-primary);
+        }
+
+        .plugin-details-author {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .plugin-details-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            background: rgba(157, 77, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            color: var(--light-text);
-            font-size: 1rem;
+            gap: 0.5rem;
+        }
+
+        .stat i {
+            color: var(--neon-primary);
+        }
+
+        .plugin-details-description {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(157, 77, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
             padding: 0.8rem 1.5rem;
-            background: rgba(30, 30, 30, 0.8);
-            border-radius: 25px;
-            border: 1px solid rgba(57, 255, 20, 0.3);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            position: relative;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .tab.active {
+            color: var(--neon-primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .changelog-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed rgba(157, 77, 255, 0.2);
+        }
+
+        .changelog-version {
+            font-weight: bold;
+            color: var(--neon-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .changelog-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .changelog-changes ul {
+            margin-left: 1.5rem;
+        }
+
+        .changelog-changes li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(157, 77, 255, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-primary);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+            text-decoration: none;
             transition: all 0.3s ease;
+            border: 1px solid rgba(157, 77, 255, 0.2);
         }
 
-        .table-legend li:hover {
+        .social-link:hover {
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            color: white;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(57, 255, 20, 0.3);
         }
 
-        /* Responsive Anpassungen */
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .week-table th, 
-            .week-table td {
-                padding: 1rem;
-                font-size: 0.95rem;
+            .hero h1 {
+                font-size: 2.5rem;
             }
             
-            .table-legend ul {
-                flex-direction: column;
-                gap: 1rem;
+            .hero p {
+                font-size: 1.2rem;
             }
             
-            .week-table td i {
-                font-size: 1rem;
-            }
-
-            .neon-text {
-                font-size: 1.8rem;
+            .plugin-details-header {
                 flex-direction: column;
-                align-items: flex-start;
             }
-
-            .date-range {
-                font-size: 0.8rem;
-                margin-top: 5px;
+            
+            .plugin-details-image {
+                margin-bottom: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <section class="section">
-        <div class="container">
-            <h2 class="neon-text">
-                <i class="fas fa-calendar-alt"></i> 5-Tage-Plan 
-                <span class="date-range">07.04 - 11.04.2025</span>
-            </h2>
-            
-            <div class="wiki-section">
-                <div class="table-responsive">
-                    <table class="week-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-calendar-day"></i> Tag</th>
-                                <th><i class="fa-solid fa-shoe-prints"></i> Schritte</th>
-                                <th><i class="fas fa-sticky-note"></i> Notizen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="highlight">
-                                <td>Montag<br><span class="date">07.04</span></td>
-                                <td><i class="fa-brands fa-odnoklassniki" style="color: var(--neon-pink);"></i> Rund 5000 Schritte</td>
-                                <td><i class="fas fa-sticky-note" style="color: var(--neon-green);"></i> Hatte den Schrittzähler nicht immer bei mir</td>
-                            </tr>
-                            <tr>
-                                <td>Dienstag<br><span class="date">08.04</span></td>
-                                <td><i class="fa-brands fa-odnoklassniki" style="color: var(--neon-pink);"></i> Rund 4000 Schritte</td>
-                                <td><i class="fas fa-sticky-note" style="color: var(--neon-green);"></i> Habe den Schrittzähler verloren aber erst um ca. 17 Uhr...</td>
-                            </tr>
-                            <tr class="highlight">
-                                <td>Mittwoch<br><span class="date">09.04</span></td>
-                                <td><i class="" style="color: var(--neon-yellow);"></i> ---</td>
-                                <td><i class="" style="color: var(--neon-blue);"></i> ---</td>
-                            </tr>
-                            <tr>
-                                <td>Donnerstag<br><span class="date">10.04</span></td>
-                                <td><i class="" style="color: var(--neon-green);"></i> ---</td>
-                                <td><i class="" style="color: var(--neon-blue);"></i> ---</td>
-                            </tr>
-                            <tr class="highlight">
-                                <td>Freitag<br><span class="date">11.04</span></td>
-                                <td><i class="" style="color: var(--neon-blue);"></i> ---</td>
-                                <td><i class="" style="color: var(--neon-green);"></i> ---</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">BytePlugins</a>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#plugins">Plugins</a>
+                <a href="#">Documentation</a>
+                <a href="#">Support</a>
+                <a href="#">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Premium Minecraft Plugins</h1>
+        <p>Entdecke die Welt der Minecraft Server Plugins auf einem neuen Level.</p>
+        <div class="cta-buttons">
+            <a href="#plugins" class="btn btn-primary">Browse Plugins</a>
+        </div>
+    </section>
+
+    <section class="plugins-section" id="plugins">
+        <div class="section-header">
+            <h2>Plugins</h2>
+        </div>
+        <div class="plugins-grid">
+            <!-- Plugin 1 -->
+            <div class="plugin-card" onclick="openModal('modal1')">
+                <div class="plugin-image">
+                    <i class="fas fa-th-large"></i>
                 </div>
+                <div class="plugin-content">
+                    <h3 class="plugin-title">NTMenusv2</h3>
+                    <p class="plugin-description">Advanced anti-cheat and player protection system with customizable rules and real-time monitoring.</p>
+                    <div class="plugin-stats">
+                        <span class="plugin-version">v1.0.0</span>
+                    </div>
+                    <div class="plugin-buttons">
+                        <a href="#" class="btn btn-primary btn-small">Download</a>
+                    </div>
+                </div>
+            </div>
+
+    <!-- Modal 1 -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>NTMenusv2</h2>
+            <button class="close-modal" onclick="closeModal('modal1')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="plugin-details-header">
+                <div class="plugin-details-image">
+                    <i class="fas fa-th-large"></i>
+                </div>
+                <div class="plugin-details-info">
+                    <h1 class="plugin-details-title">NTMenusv2</h1>
+                    <p class="plugin-details-author">von ByteCodes_</p>
+                    <p class="plugin-details-description">
+                        NTMenusv2 ist ein leistungsstarkes plattformübergreifendes UI-Plugin für Minecraft-Server, das die Erstellung von nativen Bedrock-Formularen und benutzerdefinierten Java-Menüs ermöglicht. Es wurde für maximale Flexibilität und einfache Bedienung entwickelt und erlaubt es Serverbetreibern, schöne, interaktive Menüs zu erstellen – kompatibel mit Java und Bedrock.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="https://www.dropbox.com/scl/fi/qayywlupbhbzwjzew3c01/nTMenusv2-1.0.0.jar?rlkey=pppm16lnfq5sfoq9rlf5g7ix8&st=lu5zhyg7&dl=1" class="btn btn-primary" download>Download</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(this, 'tab1-description')">Beschreibung</div>
+                <div class="tab" onclick="switchTab(this, 'tab1-features')">Funktionen</div>
+                <div class="tab" onclick="switchTab(this, 'tab1-changelog')">Changelog</div>
+            </div>
+
+            <div id="tab1-description" class="tab-content active">
+                <h3>Über NTMenusv2</h3>
+                <p>
+                    NTMenusv2 schließt die Lücke zwischen Java- und Bedrock-Benutzeroberflächen. Mit dem intuitiven Builder-System können Entwickler und Serveradmins dynamische Menüs, Formulare und interaktive Interfaces ohne Aufwand erstellen. Ob GUI für Java-Spieler oder native Bedrock-Form – NTMenusv2 macht es möglich.
+                </p>
+                <p>
+                    Das Plugin unterstützt vollständige Anpassung von Layouts, Aktionen und Inhalten. Es ist optimiert für Leistung und mit allen gängigen Serverplattformen wie Paper, Spigot und Geyser kompatibel.
+                </p>
+            </div>
+
+            <div id="tab1-features" class="tab-content">
+                <h3>Hauptfunktionen</h3>
+                <ul>
+                    <li>Native Bedrock-Formularerstellung</li>
+                    <li>Java-Menü-Builder mit klickbaren Items</li>
+                    <li>Plattformübergreifende Menükompatibilität (Java & Bedrock)</li>
+                    <li>Drag-and-Drop-Menükonfiguration</li>
+                    <li>Eigene Aktionen, Events und Platzhalter</li>
+                    <li>Unterstützung für Geyser und Floodgate</li>
+                    <li>Minimale Leistungsbelastung</li>
+                    <li>Offene API für Entwickler</li>
+                    <li>Mehrsprachigkeit & Versionskompatibilität</li>
+                </ul>
+            </div>
+
+            <div id="tab1-changelog" class="tab-content">
+                <h3>Versionsverlauf</h3>
                 
-                <div class="table-legend">
-                    <h3><i class="fas fa-info-circle"></i> Legende</h3>
-                    <ul>
-                        <li><i class="fas fa-fire" style="color: var(--neon-blue);"></i> Mehr als 5500 Schritte</li>
-                        <li><i class="fas fa-gauge" style="color: var(--neon-orange);"></i> Genau 5000 Schritte</li>
-                        <li><i class="fa-brands fa-odnoklassniki" style="color: var(--neon-pink);"></i> Weniger als 5000 Schritte</li>
-                    </ul>
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.0.0</div>
+                    <div class="changelog-date">9. Mai 2025</div>
+                    <div class="changelog-changes">
+                        <ul>
+                            <li>Erstveröffentlichung von NTMenusv2</li>
+                            <li>Bedrock-Formular-Builder hinzugefügt</li>
+                            <li>Java-Menü-Builder implementiert</li>
+                            <li>Geyser-Unterstützung integriert</li>
+                            <li>Grundlegendes Platzhalter- und Click-Event-System enthalten</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
+<footer>
+    <div class="footer-content">
+        <div class="footer-logo">BytePlugins</div>
+<div class="footer-links">
+    <a href="/impressum.html">Impressum</a>
+    <a href="/datenschutz.html">Datenschutz</a>
+    <a href="/agb.html">AGB</a>
+</div>
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="copyright">
+            © 2025 BytePlugins. Alle Rechte vorbehalten.
+        </div>
+    </div>
+</footer>
+
+    <script>
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Tab switching
+        function switchTab(tabElement, tabContentId) {
+            // Get all tabs and tab contents in the current modal
+            const modal = tabElement.closest('.modal-body');
+            const tabs = modal.querySelectorAll('.tab');
+            const tabContents = modal.querySelectorAll('.tab-content');
+
+            // Remove active class from all tabs and contents
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            tabElement.classList.add('active');
+            document.getElementById(tabContentId).classList.add('active');
+        }
+
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Add animation to plugin cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const pluginCards = document.querySelectorAll('.plugin-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            pluginCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGB | BytePlugins</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body { background: #0f0f1a; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; padding: 2rem; }
+    h1 { font-size: 2.5rem; background: linear-gradient(90deg, #9d4dff, #4da6ff); -webkit-background-clip: text; color: transparent; text-align: center; animation: neon-glow 3s infinite; }
+    h2 { margin-top: 2rem; color: #9d4dff; }
+    .card { background-color: #1a1a2e; border: 1px solid rgba(157, 77, 255, 0.3); border-radius: 15px; padding: 2rem; max-width: 800px; margin: auto; box-shadow: 0 0 20px rgba(157, 77, 255, 0.1); opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .card.visible { opacity: 1; transform: translateY(0); }
+    p, li { color: #b8b8b8; line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    @keyframes neon-glow {
+      0%, 100% { text-shadow: 0 0 10px #9d4dff, 0 0 20px #9d4dff, 0 0 30px #9d4dff; }
+      50% { text-shadow: 0 0 5px #9d4dff, 0 0 15px #4da6ff; }
+    }
+  </style>
+</head>
+<body>
+  <h1>AGB</h1>
+  <div class="card" id="agb-card">
+    <h2>1. Geltungsbereich</h2>
+    <p>Diese AGB gelten für alle Downloads und Nutzung der Plugins von BytePlugins im privaten Rahmen.</p>
+
+    <h2>2. Nutzungslizenz</h2>
+    <p>Plugins dürfen frei genutzt, aber nicht verändert, weiterverkauft oder kommerziell vertrieben werden.</p>
+
+    <h2>3. Haftung</h2>
+    <p>Es wird keine Haftung für Schäden übernommen, die durch Nutzung oder Installation der Plugins entstehen.</p>
+
+    <h2>4. Widerruf</h2>
+    <p>Bei kostenlosen Downloads entfällt ein Widerrufsrecht.</p>
+
+    <p>Stand: Mai 2025</p>
+  </div>
+
+  <script>
+    const el = document.getElementById('agb-card');
+    new IntersectionObserver(e => {
+      if (e[0].isIntersecting) el.classList.add('visible');
+    }).observe(el);
+  </script>
+</body>
+</html>

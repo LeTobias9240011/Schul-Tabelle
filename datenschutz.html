@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datenschutz | BytePlugins</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body { background: #0f0f1a; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; padding: 2rem; }
+    h1 { font-size: 2.5rem; background: linear-gradient(90deg, #9d4dff, #4da6ff); -webkit-background-clip: text; color: transparent; text-align: center; animation: neon-glow 3s infinite; }
+    h2 { margin-top: 2rem; color: #9d4dff; }
+    .card { background-color: #1a1a2e; border: 1px solid rgba(157, 77, 255, 0.3); border-radius: 15px; padding: 2rem; max-width: 800px; margin: auto; box-shadow: 0 0 20px rgba(157, 77, 255, 0.1); opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .card.visible { opacity: 1; transform: translateY(0); }
+    p, li { color: #b8b8b8; line-height: 1.8; }
+    ul { padding-left: 1.5rem; }
+    a { color: #9d4dff; text-decoration: none; }
+    a:hover { color: #4da6ff; }
+    @keyframes neon-glow {
+      0%, 100% { text-shadow: 0 0 10px #9d4dff, 0 0 20px #9d4dff, 0 0 30px #9d4dff; }
+      50% { text-shadow: 0 0 5px #9d4dff, 0 0 15px #4da6ff; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Datenschutzerklärung</h1>
+  <div class="card" id="privacy-card">
+    <h2>1. Verantwortlich</h2>
+    <p>Max Mustermann, Musterstraße 12, 12345 Musterstadt<br/>E-Mail: <a href="mailto:max@mustermann.de">max@mustermann.de</a></p>
+
+    <h2>2. Erhobene Daten</h2>
+    <p>Beim Aufruf der Seite werden IP-Adresse, Browsertyp und Uhrzeit gespeichert (Server-Logfiles). Keine Auswertung durch Tracking.</p>
+
+    <h2>3. Cookies</h2>
+    <p>Diese Website verwendet keine Cookies zur Nutzerverfolgung.</p>
+
+    <h2>4. Kontaktaufnahme</h2>
+    <p>Bei Kontakt per E-Mail werden Daten nur zur Bearbeitung der Anfrage verwendet.</p>
+
+    <h2>5. Drittanbieter-Inhalte</h2>
+    <p>Verlinkungen zu Discord, GitHub oder Dropbox – beim Anklicken gelten deren Datenschutzrichtlinien.</p>
+
+    <h2>6. Deine Rechte</h2>
+    <ul>
+      <li>Auskunft über gespeicherte Daten</li>
+      <li>Löschung und Berichtigung</li>
+      <li>Widerspruch gegen Datenverarbeitung</li>
+    </ul>
+
+    <p>Stand: Mai 2025</p>
+  </div>
+
+  <script>
+    const el = document.getElementById('privacy-card');
+    new IntersectionObserver(e => {
+      if (e[0].isIntersecting) el.classList.add('visible');
+    }).observe(el);
+  </script>
+</body>
+</html>
